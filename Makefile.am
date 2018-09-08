@@ -20,7 +20,7 @@ $(srcdir)/src/bin/z2l: $(z2l_bin)
 	$(SED) 's,#datadir#,$(datadir),g' $< > $@
 	chmod +x $@
 
-dist_bin_SCRIPTS = $(srcdir)/src/bin/vivado \
+dist_bin_SCRIPTS = $(srcdir)/src/bin/vivado $(srcdir)/src/bin/xvhdl \
 $(srcdir)/src/bin/petalinux-boot \
 $(srcdir)/src/bin/petalinux-build \
 $(srcdir)/src/bin/petalinux-config \
