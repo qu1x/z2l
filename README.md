@@ -52,7 +52,7 @@ git clone https://github.com/qu1x/z2l.git
 
 ```sh
 cd z2l
-autoreconf -i
+./bootstrap
 ```
 
 ## Installing one of them
