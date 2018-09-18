@@ -1,0 +1,15 @@
+INSTALL
+Makefile
+Makefile.in
+README
+aclocal.m4
+autom4te.cache/
+config.log
+config.status
+configure
+install-sh
+missing
+src/bash_completion/z2l
+src/bin/z2l
+z2l-*.tar.gz
+z2l-*.tar.xz
