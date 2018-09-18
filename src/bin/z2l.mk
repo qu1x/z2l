@@ -310,7 +310,7 @@ $(FW_HDF_DST): $(FW_HDF_SRC) | $(FW_DST)
 $(FW_CFG_DST): | $(FW_DST)
 
 $(FW_DST): | $(FW_HDF_SRC)
-	petalinux-create -t project --template zynq -n $(FW) --out $(DST)
+	cd $(DST) && petalinux-create -t project --template zynq -n $(FW)
 	petalinux-create -t apps -n pfs --enable -p $(FW_DST)
 	rm $(FW_PFS_DST)README $(FW_PFS_DST)pfs.c
 	cp $(FW_PFS_SRC) $(FW_PFS_DST)
