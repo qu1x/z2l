@@ -79,7 +79,7 @@ unzip texinfo gcc-multilib build-essential libglib2.0-dev screen pax gzip
 ```
 
  6. Fix Xilinx PetaLinux 2018.2 installer by copying below `sed` wrapper to
-`/usr/local/bin`. Remove or rename it after installation. See [https://forums.xilinx.com/t5/Embedded-Linux/PetaLinux-2018-1-Install-Fails-on-Debian-Stretch/m-p/887733/highlight/true#M28391](forum post).
+`/usr/local/bin`. Remove or rename it after installation. See [forum post](https://forums.xilinx.com/t5/Embedded-Linux/PetaLinux-2018-1-Install-Fails-on-Debian-Stretch/m-p/887733/highlight/true#M28391).
 
 ```sh
 #! /bin/sh
