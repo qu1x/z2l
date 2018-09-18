@@ -492,3 +492,4 @@ $(SSH_CMDS):
 $(CFG_SRC):
 	mkdir -p $@
 
+%.mk:;
