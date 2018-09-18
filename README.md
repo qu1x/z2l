@@ -1,6 +1,6 @@
 > This file is part of Zed Tool, see <https://qu1x.org/z2l>.
 > 
-> Copyright (c) 2016 Rouven Spreckels <n3vu0r@qu1x.org>
+> Copyright (c) 2016, 2018 Rouven Spreckels <n3vu0r@qu1x.org>
 > 
 > Zed Tool is free software: you can redistribute it and/or modify
 > it under the terms of the GNU Affero General Public License version 3
@@ -14,70 +14,110 @@
 > You should have received a copy of the GNU Affero General Public License
 > along with Zed Tool. If not, see <https://www.gnu.org/licenses>.
 
-Zed Tool
-========
+# Zed Tool
 
 Workflow kit managing hardware, firmware, and software development.
 
-Installation
-============
+# Installation
 
-Either getting a release
-------------------------
+## Either getting a release
 
-1. Download stable source distribution tarball.
+ 1. Download stable source distribution tarball.
 
-		wget https://qu1x.org/file/z2l-1.0.0.tar.xz
+```sh
+wget https://qu1x.org/file/z2l-1.0.0.tar.xz
+```
+ 2. Extract and enter.
 
-2. Extract and enter.
+```sh
+tar -xJf z2l-1.0.0.tar.xz
+cd z2l-1.0.0
+```
 
-		tar -xJf z2l-1.0.0.tar.xz
-		cd z2l-1.0.0
+## Or getting a snapshot
 
-Or getting a snapshot
----------------------
+ 1. Clone repository.
 
-1. Clone repository.
+```sh
+git clone https://github.com/qu1x/z2l.git
+```
 
-		git clone https://github.com/qu1x/z2l.git
+ 2. Enter and generate latest source distribution.
 
-2. Enter and generate latest source distribution.
+```sh
+cd z2l
+autoreconf -i
+```
 
-		cd z2l
-		autoreconf -i
+## Installing one of them
 
-Installing one of them
-----------------------
+ 3. Configure, build, and install.
 
-3. Configure, build, and install.
+```sh
+./configure --sysconfdir=/etc
+make
+sudo make install
+```
 
-		./configure --sysconfdir=/etc
-		make
-		sudo make install
+ 4. Keep to uninstall someday.
 
-4. Keep to uninstall someday.
+```sh
+sudo make uninstall
+```
 
-		sudo make uninstall
+## Installing Xilinx PetaLinux
 
-Usage
-=====
+ 5. Install requirements.
 
-RTFM:
+```sh
+sudo dpkg --add-architecture i386
+sudo apt update
+sudo apt install tofrodos iproute2 gawk xvfb git make net-tools \
+libncurses5-dev tftpd zlib1g-dev zlib1g-dev:i386 libssl-dev flex bison \
+libselinux1 gnupg wget diffstat chrpath socat xterm autoconf libtool-bin tar \
+unzip texinfo gcc-multilib build-essential libglib2.0-dev screen pax gzip
+```
 
-		man z2l
+ 6. Fix Xilinx PetaLinux 2018.2 installer by copying below `sed` wrapper to
+`/usr/local/bin`. Remove or rename it after installation. See [https://forums.xilinx.com/t5/Embedded-Linux/PetaLinux-2018-1-Install-Fails-on-Debian-Stretch/m-p/887733/highlight/true#M28391](forum post).
 
-Version
-=======
+```sh
+#! /bin/sh
+
+# Remove newlines if called by the buggy Xilinx PetaLinux 2018.2 installer.
+if [ "$2" = "s/^.*minimal-\(.*\)-toolchain.*/\1/" ] ; then
+	/bin/sed "$@" | tr '\n' ' '
+else
+	/bin/sed "$@"
+fi
+```
+
+ 7. Finally, install it.
+
+```sh
+sudo mkdir /opt/Xilinx
+sudo chown $USER: /opt/Xilinx
+chmod +x petalinux-v2018.2-final-installer.run
+mkdir -p /opt/Xilinx/PetaLinux/2018.2
+./petalinux-v*-final-installer.run /opt/Xilinx/PetaLinux/2018.2
+```
+
+# Usage
+
+RTFM.
+
+```sh
+man z2l
+```
+
+# Version
 
 z2l-1.0.0 <https://qu1x.org/z2l>
 
-License
-=======
+# License
 
 GNU Affero General Public License version 3
 
-Authors
-=======
+# Authors
 
-* Copyright (c) 2016 Rouven Spreckels <n3vu0r@qu1x.org>
-
+  * Copyright (c) 2016, 2018 Rouven Spreckels <n3vu0r@qu1x.org>

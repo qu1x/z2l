@@ -2,7 +2,7 @@
 
 # This file is part of Zed Tool, see <https://qu1x.org/z2l>.
 # 
-# Copyright (c) 2016 Rouven Spreckels <n3vu0r@qu1x.org>
+# Copyright (c) 2016, 2018 Rouven Spreckels <n3vu0r@qu1x.org>
 # 
 # Zed Tool is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License version 3
