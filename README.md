@@ -55,7 +55,7 @@ cd z2l
 ./bootstrap
 ```
 
-## Installing one of them
+## Install one of them
 
  3. Configure, build, and install.
 
@@ -71,7 +71,7 @@ sudo make install
 sudo make uninstall
 ```
 
-## Installing Xilinx PetaLinux
+## Install Xilinx Toolchain
 
  0. Install requirements.
 
@@ -85,7 +85,8 @@ unzip texinfo gcc-multilib build-essential libglib2.0-dev screen pax gzip
 ```
 
  1. Fix Xilinx PetaLinux 2018.2 installer by copying below `sed` wrapper to
-`/usr/local/bin`. Remove or rename it after installation. See [forum post](https://forums.xilinx.com/t5/Embedded-Linux/PetaLinux-2018-1-Install-Fails-on-Debian-Stretch/m-p/887733/highlight/true#M28391).
+`/usr/local/bin`. Remove or rename it after installation otherwise you will
+encounter errors during `petalinux-build`. See [forum post](https://forums.xilinx.com/t5/Embedded-Linux/PetaLinux-2018-1-Install-Fails-on-Debian-Stretch/m-p/887733/highlight/true#M28391).
 
 ```sh
 #! /bin/sh
@@ -108,15 +109,15 @@ mkdir -p /opt/Xilinx/PetaLinux/2018.2
 ./petalinux-v*-final-installer.run /opt/Xilinx/PetaLinux/2018.2
 # Install Vivado 2018.2. Exceptionally, it's straightforward.
 # For Zynq products you can get a free license from Xilinx.
+mkdir ~/.z2l
+echo "path/to/license/file.lic/or/licence/server/url" > ~/.z2l/hw.lic
 ```
 
- 3. Tell Zed Tool how to source it.
+ 3. Tell Zed Tool how to source it if you chose different installation paths.
 
 ```sh
-mkdir ~/.z2l
 echo "/opt/Xilinx/PetaLinux/2018.2/settings.sh" > ~/.z2l/fw.src
 echo "/opt/Xilinx/Vivado/2018.2/settings64.sh" > ~/.z2l/hw.src
-echo "path/to/license/file.lic/or/licence/server/url" > ~/.z2l/hw.lic
 ```
 
 # Usage

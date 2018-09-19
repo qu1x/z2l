@@ -155,28 +155,28 @@ HW_HDF_SRC := $(wildcard $(HW_DST)$(HW_PRJ).srcs/sources_1/bd/*/*.bd)
 HW_HDF_DST := $(HW_DST)$(HW_PRJ).sdk/$(HW_TOP).hdf
 
 FW_HDF_SRC := $(HW_HDF_DST)
-FW_HDF_DST := $(FW_DST)subsystems/linux/hw-description/system.hdf
+FW_HDF_DST := $(FW_DST)project-spec/hw-description/system.hdf
 
-FW_PFS_SRC := $(FW_Z2L)pfs/Makefile $(FW_Z2L)pfs/pfs.sh
-FW_PFS_DST := $(FW_DST)components/apps/pfs/
+FW_PFS_SRC := $(FW_Z2L)pfs/pfs.bb $(FW_Z2L)pfs/Makefile $(FW_Z2L)pfs/pfs.sh
+FW_PFS_DST := $(FW_DST)project-spec/meta-user/recipes-apps/pfs/files/
 
 FW_SYS_SRC := $(FW_SRC)system
-FW_SYS_DST := $(FW_DST)subsystems/linux/config
+FW_SYS_DST := $(FW_DST)project-spec/configs/config
 
 FW_RFS_SRC := $(FW_SRC)rootfs
-FW_RFS_DST := $(FW_DST)subsystems/linux/configs/rootfs/config
+FW_RFS_DST := $(FW_DST)project-spec/configs/rootfs_config
 
-FW_LNX_SRC := $(FW_SRC)kernel
-FW_LNX_DST := $(FW_DST)subsystems/linux/configs/kernel/config
+FW_LNX_SRC := #$(FW_SRC)kernel
+FW_LNX_DST := #$(FW_DST)project-spec/configs/kernel_config
 
-FW_UBL_SRC := $(FW_SRC)u-boot
-FW_UBL_DST := $(FW_DST)subsystems/linux/configs/u-boot/config
+FW_UBL_SRC := #$(FW_SRC)u-boot
+FW_UBL_DST := #$(FW_DST)project-spec/configs/u-boot_config
 
 FW_PLT_SRC := $(FW_SRC)u-boot.h
-FW_PLT_DST := $(FW_DST)subsystems/linux/configs/u-boot/platform-top.h
+FW_PLT_DST := $(FW_DST)project-spec/meta-user/recipes-bsp/u-boot/files/platform-top.h
 
 FW_DTS_SRC := $(FW_SRC)system.dts
-FW_DTS_DST := $(FW_DST)subsystems/linux/configs/device-tree/system-top.dts
+FW_DTS_DST := $(FW_DST)project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
 
 FW_CFG_SRC := \
 $(FW_DTS_SRC) $(FW_PLT_SRC) $(FW_UBL_SRC) \
@@ -188,8 +188,8 @@ $(FW_LNX_DST) $(FW_RFS_DST) $(FW_SYS_DST)
 
 FW_BIN_DST := $(CFG_SRC)boot.bin
 
-FW_ITB_SRC := $(FW_HDF_DST) $(FW_CFG_DST)
-FW_ITB_DST := $(CFG_SRC)root.itb
+FW_IMG_SRC := $(FW_HDF_DST) $(FW_CFG_DST)
+FW_IMG_DST := $(CFG_SRC)image.ub
 
 HW_CMD := vivado -mode batch -source
 HW_ARG := -appjournal -journal $(HW_JOU) -applog -log $(HW_LOG) \
@@ -232,7 +232,7 @@ $(HOME)/.z2l/hw.src: | $(HOME)/.z2l
 	printf "/opt/Xilinx/Vivado/*/settings64.sh" > $@
 
 $(HOME)/.z2l/fw.src: | $(HOME)/.z2l
-	printf "/opt/Xilinx/petalinux-v*-final/settings.sh" > $@
+	printf "/opt/Xilinx/PetaLinux/*/settings.sh" > $@
 
 $(HOME)/.z2l:
 	mkdir -p $@
@@ -288,39 +288,38 @@ hw.distclean:
 ####
 
 .PHONY: fw
-fw: $(FW_ITB_DST) $(FW_BIN_DST)
+fw: $(FW_IMG_DST) $(FW_BIN_DST)
 
 # Creates boot binary locally, option -o just copies over.
-$(FW_BIN_DST): $(HW_BIT_DST) $(FW_ITB_DST) | $(CFG_SRC)
+$(FW_BIN_DST): $(HW_BIT_DST) $(FW_IMG_DST) | $(CFG_SRC)
 	petalinux-package --boot --fpga $(HW_BIT_DST) --u-boot \
 	-p $(FW_DST) --force -o $@
 
-$(FW_ITB_DST): $(FW_DST)images/linux/root.itb
-	cp $< $@ # Image must be named root.itb twice!
+$(FW_IMG_DST): $(FW_DST)images/linux/image.ub
+	cp $< $@
 
-$(FW_DST)images/linux/root.itb: $(FW_ITB_SRC) | $(CFG_SRC)
-	petalinux-build -v -p $(FW_DST)
+$(FW_DST)images/linux/image.ub: $(FW_IMG_SRC) | $(FW_PFS_DST) $(CFG_SRC)
+	petalinux-build -p $(FW_DST)
 
-# Since this will invoke petalinux-config like fw.edit.sys does, use it to
-# actually change image name from image.ub to root.itb at both config entries.
-# In case of a following fw.load, just exit.
+$(FW_PFS_DST): $(FW_HDF_DST)
+	petalinux-create -t apps --template install -n pfs --enable -p $(FW_DST)
+	rm $(FW_PFS_DST)pfs
+	cp $(FW_PFS_SRC) $(FW_PFS_DST)
+	mv $(FW_PFS_DST)pfs.bb $(FW_PFS_DST)..
+
 $(FW_HDF_DST): $(FW_HDF_SRC) | $(FW_DST)
 	petalinux-config --get-hw-description=$(dir $(FW_HDF_SRC)) -p $(FW_DST)
 
 $(FW_CFG_DST): | $(FW_DST)
 
 $(FW_DST): | $(FW_HDF_SRC)
-	cd $(DST) && petalinux-create -t project --template zynq -n $(FW)
-	petalinux-create -t apps -n pfs --enable -p $(FW_DST)
-	rm $(FW_PFS_DST)README $(FW_PFS_DST)pfs.c
-	cp $(FW_PFS_SRC) $(FW_PFS_DST)
+	cd $(DST) && petalinux-create -t project --template zynq -n $(FW:/=)
 	test -e $(FW_SYS_SRC) && cp $(FW_SYS_SRC) $(FW_SYS_DST) || true
 	test -e $(FW_RFS_SRC) && cp $(FW_RFS_SRC) $(FW_RFS_DST) || true
-	test -e $(FW_LNX_SRC) && cp $(FW_LNX_SRC) $(FW_LNX_DST) || true
-	test -e $(FW_UBL_SRC) && cp $(FW_UBL_SRC) $(FW_UBL_DST) || true
+	#test -e $(FW_LNX_SRC) && cp $(FW_LNX_SRC) $(FW_LNX_DST) || true
+	#test -e $(FW_UBL_SRC) && cp $(FW_UBL_SRC) $(FW_UBL_DST) || true
 	test -e $(FW_PLT_SRC) && cp $(FW_PLT_SRC) $(FW_PLT_DST) || true
 	test -e $(FW_DTS_SRC) && cp $(FW_DTS_SRC) $(FW_DTS_DST) || true
-	petalinux-config --get-hw-description=$(dir $(FW_HDF_SRC)) -p $(FW_DST)
 
 .PHONY: fw.edit
 fw.edit: | $(FW_CFG_DST)
@@ -356,8 +355,8 @@ fw.edit.dts: | $(FW_DTS_DST)
 fw.diff:
 	test -e $(FW_SYS_SRC) && diff $(FW_SYS_DST) $(FW_SYS_SRC) || true
 	test -e $(FW_RFS_SRC) && diff $(FW_RFS_DST) $(FW_RFS_SRC) || true
-	test -e $(FW_LNX_SRC) && diff $(FW_LNX_DST) $(FW_LNX_SRC) || true
-	test -e $(FW_UBL_SRC) && diff $(FW_UBL_DST) $(FW_UBL_SRC) || true
+	#test -e $(FW_LNX_SRC) && diff $(FW_LNX_DST) $(FW_LNX_SRC) || true
+	#test -e $(FW_UBL_SRC) && diff $(FW_UBL_DST) $(FW_UBL_SRC) || true
 	test -e $(FW_PLT_SRC) && diff $(FW_PLT_DST) $(FW_PLT_SRC) || true
 	test -e $(FW_DTS_SRC) && diff $(FW_DTS_DST) $(FW_DTS_SRC) || true
 
@@ -365,8 +364,8 @@ fw.diff:
 fw.load: | $(FW_DST)
 	test -e $(FW_SYS_SRC) && cp $(FW_SYS_SRC) $(FW_SYS_DST) || true
 	test -e $(FW_RFS_SRC) && cp $(FW_RFS_SRC) $(FW_RFS_DST) || true
-	test -e $(FW_LNX_SRC) && cp $(FW_LNX_SRC) $(FW_LNX_DST) || true
-	test -e $(FW_UBL_SRC) && cp $(FW_UBL_SRC) $(FW_UBL_DST) || true
+	#test -e $(FW_LNX_SRC) && cp $(FW_LNX_SRC) $(FW_LNX_DST) || true
+	#test -e $(FW_UBL_SRC) && cp $(FW_UBL_SRC) $(FW_UBL_DST) || true
 	test -e $(FW_PLT_SRC) && cp $(FW_PLT_SRC) $(FW_PLT_DST) || true
 	test -e $(FW_DTS_SRC) && cp $(FW_DTS_SRC) $(FW_DTS_DST) || true
 
@@ -374,8 +373,8 @@ fw.load: | $(FW_DST)
 fw.save: | $(FW_SRC)
 	cp $(FW_SYS_DST) $(FW_SYS_SRC)
 	cp $(FW_RFS_DST) $(FW_RFS_SRC)
-	cp $(FW_LNX_DST) $(FW_LNX_SRC)
-	cp $(FW_UBL_DST) $(FW_UBL_SRC)
+	#cp $(FW_LNX_DST) $(FW_LNX_SRC)
+	#cp $(FW_UBL_DST) $(FW_UBL_SRC)
 	cp $(FW_PLT_DST) $(FW_PLT_SRC)
 	cp $(FW_DTS_DST) $(FW_DTS_SRC)
 
@@ -385,7 +384,7 @@ $(FW_SRC):
 # A following fw will trigger a rebuild.
 .PHONY: fw.clean
 fw.clean:
-	rm -f $(FW_ITB_DST) $(FW_BIN_DST)
+	rm -f $(FW_IMG_DST) $(FW_BIN_DST)
 
 # Cleans the higher-level project. A following fw will not trigger a rebuild.
 .PHONY: fw.distclean

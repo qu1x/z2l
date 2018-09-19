@@ -17,6 +17,6 @@
 # along with Zed Tool. If not, see <https://www.gnu.org/licenses>.
 
 src=$(cat $HOME/.z2l/fw.src)
-. $src $(dirname $src)
+. $src $(dirname $src) >/dev/null
 
 $(basename $0) $@
