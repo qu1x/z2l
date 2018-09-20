@@ -173,10 +173,12 @@ FW_UBL_SRC := #$(FW_SRC)u-boot
 FW_UBL_DST := #$(FW_DST)project-spec/configs/u-boot_config
 
 FW_PLT_SRC := $(FW_SRC)u-boot.h
-FW_PLT_DST := $(FW_DST)project-spec/meta-user/recipes-bsp/u-boot/files/platform-top.h
+FW_PLT_DST := $(FW_DST)project-spec/meta-user/recipes-bsp/
+FW_PLT_DST := $(FW_PLT_DST)u-boot/files/platform-top.h
 
 FW_DTS_SRC := $(FW_SRC)system.dts
-FW_DTS_DST := $(FW_DST)project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
+FW_DTS_DST := $(FW_DST)project-spec/meta-user/recipes-bsp/
+FW_DTS_DST := $(FW_DTS_DST)device-tree/files/system-user.dtsi
 
 FW_CFG_SRC := \
 $(FW_DTS_SRC) $(FW_PLT_SRC) $(FW_UBL_SRC) \
@@ -316,8 +318,8 @@ $(FW_DST): | $(FW_HDF_SRC)
 	cd $(DST) && petalinux-create -t project --template zynq -n $(FW:/=)
 	test -e $(FW_SYS_SRC) && cp $(FW_SYS_SRC) $(FW_SYS_DST) || true
 	test -e $(FW_RFS_SRC) && cp $(FW_RFS_SRC) $(FW_RFS_DST) || true
-	#test -e $(FW_LNX_SRC) && cp $(FW_LNX_SRC) $(FW_LNX_DST) || true
-	#test -e $(FW_UBL_SRC) && cp $(FW_UBL_SRC) $(FW_UBL_DST) || true
+#	test -e $(FW_LNX_SRC) && cp $(FW_LNX_SRC) $(FW_LNX_DST) || true
+#	test -e $(FW_UBL_SRC) && cp $(FW_UBL_SRC) $(FW_UBL_DST) || true
 	test -e $(FW_PLT_SRC) && cp $(FW_PLT_SRC) $(FW_PLT_DST) || true
 	test -e $(FW_DTS_SRC) && cp $(FW_DTS_SRC) $(FW_DTS_DST) || true
 
@@ -355,8 +357,8 @@ fw.edit.dts: | $(FW_DTS_DST)
 fw.diff:
 	test -e $(FW_SYS_SRC) && diff $(FW_SYS_DST) $(FW_SYS_SRC) || true
 	test -e $(FW_RFS_SRC) && diff $(FW_RFS_DST) $(FW_RFS_SRC) || true
-	#test -e $(FW_LNX_SRC) && diff $(FW_LNX_DST) $(FW_LNX_SRC) || true
-	#test -e $(FW_UBL_SRC) && diff $(FW_UBL_DST) $(FW_UBL_SRC) || true
+#	test -e $(FW_LNX_SRC) && diff $(FW_LNX_DST) $(FW_LNX_SRC) || true
+#	test -e $(FW_UBL_SRC) && diff $(FW_UBL_DST) $(FW_UBL_SRC) || true
 	test -e $(FW_PLT_SRC) && diff $(FW_PLT_DST) $(FW_PLT_SRC) || true
 	test -e $(FW_DTS_SRC) && diff $(FW_DTS_DST) $(FW_DTS_SRC) || true
 
@@ -364,8 +366,8 @@ fw.diff:
 fw.load: | $(FW_DST)
 	test -e $(FW_SYS_SRC) && cp $(FW_SYS_SRC) $(FW_SYS_DST) || true
 	test -e $(FW_RFS_SRC) && cp $(FW_RFS_SRC) $(FW_RFS_DST) || true
-	#test -e $(FW_LNX_SRC) && cp $(FW_LNX_SRC) $(FW_LNX_DST) || true
-	#test -e $(FW_UBL_SRC) && cp $(FW_UBL_SRC) $(FW_UBL_DST) || true
+#	test -e $(FW_LNX_SRC) && cp $(FW_LNX_SRC) $(FW_LNX_DST) || true
+#	test -e $(FW_UBL_SRC) && cp $(FW_UBL_SRC) $(FW_UBL_DST) || true
 	test -e $(FW_PLT_SRC) && cp $(FW_PLT_SRC) $(FW_PLT_DST) || true
 	test -e $(FW_DTS_SRC) && cp $(FW_DTS_SRC) $(FW_DTS_DST) || true
 
@@ -373,8 +375,8 @@ fw.load: | $(FW_DST)
 fw.save: | $(FW_SRC)
 	cp $(FW_SYS_DST) $(FW_SYS_SRC)
 	cp $(FW_RFS_DST) $(FW_RFS_SRC)
-	#cp $(FW_LNX_DST) $(FW_LNX_SRC)
-	#cp $(FW_UBL_DST) $(FW_UBL_SRC)
+#	cp $(FW_LNX_DST) $(FW_LNX_SRC)
+#	cp $(FW_UBL_DST) $(FW_UBL_SRC)
 	cp $(FW_PLT_DST) $(FW_PLT_SRC)
 	cp $(FW_DTS_DST) $(FW_DTS_SRC)
 
