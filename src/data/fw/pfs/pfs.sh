@@ -34,9 +34,15 @@ echo 'Linking PFS'
 pfs=$cfg/root.pfs
 cp -asf $pfs/. /
 
+if [ -e $pfs/etc/ssh ]; then
+	echo 'Copying SSH Configuration'
+	cp -R $pfs/etc/ssh /etc
+	chmod -R u=rwX,g=,o= /etc/ssh
+fi
+
 ssh=/home/root/.ssh
 if [ -e $pfs$ssh ]; then
-	echo 'Copying SSH'
+	echo 'Copying SSH Authentication'
 	cp -R $pfs$ssh $(dirname $ssh)
 	chmod -R u=rwX,g=,o= $(dirname $ssh)
 fi
