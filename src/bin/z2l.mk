@@ -35,7 +35,7 @@ Z2L := $(error Please specify Zed Tool data directory)
 endif
 
 ifndef ABI
-ABI := arm-linux-gnueabi
+ABI := arm-linux-gnueabihf
 endif
 
 ifndef HW_PRJ
