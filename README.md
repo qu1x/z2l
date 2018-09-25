@@ -39,7 +39,8 @@ cd z2l-1.0.0
  0. Install requirements.
 
 ```sh
-sudo apt install git dh-autoreconf
+sudo apt install git dh-autoreconf \
+g++-arm-linux-gnueabihf libpugixml-dev picocom
 ```
 
  1. Clone repository.
@@ -78,7 +79,7 @@ sudo make uninstall
 ```sh
 sudo dpkg --add-architecture i386
 sudo apt update
-sudo apt install tofrodos iproute2 gawk xvfb git make net-tools \
+sudo apt install tofrodos iproute2 gawk xvfb git make net-tools rlwrap \
 libncurses5-dev tftpd zlib1g-dev zlib1g-dev:i386 libssl-dev flex bison \
 libselinux1 gnupg wget diffstat chrpath socat xterm autoconf libtool-bin tar \
 unzip texinfo gcc-multilib build-essential libglib2.0-dev screen pax gzip
