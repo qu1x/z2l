@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 # This file is part of Zed Tool, see <https://qu1x.org/z2l>.
 # 

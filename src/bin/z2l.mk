@@ -229,6 +229,8 @@ install: $(HOME)/.z2l/fw.src $(HOME)/.z2l/hw.src $(HOME)/.z2l/hw.lic
 	sed -i s/ssh-server-dropbear/ssh-server-openssh/ $$(dirname "$$(cat $<)")/\
 components/yocto/source/*/layers/meta-petalinux/recipes-core/images/\
 petalinux-image-common.inc
+	ln -sf /usr/bin/rlwrap $$(dirname "$$(cat $<)")/\
+tools/hsm/bin/unwrapped/lnx64.o/rlwrap
 
 $(HOME)/.z2l/hw.lic: | $(HOME)/.z2l
 	printf "port@host" > $@
