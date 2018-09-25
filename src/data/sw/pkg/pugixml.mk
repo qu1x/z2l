@@ -48,7 +48,7 @@ $(pugixml_SRC).libs/libpugixml.so: $(pugixml_SRC)Makefile | $(SW_DST)
 	+$(MAKE) -C $(pugixml_SRC)
 
 $(pugixml_SRC)Makefile: $(pugixml_SRC)configure
-	cd $(pugixml_SRC) && \
+	cd $(pugixml_SRC) && autoreconf -i && \
 ./configure --host=$(ABI) --prefix=$(CURDIR)/$(SW_USR) $(CFG_PUGIXML)
 
 $(pugixml_SRC)configure: | $(pugixml_SRC)

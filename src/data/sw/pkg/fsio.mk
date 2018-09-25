@@ -48,7 +48,7 @@ $(fsio_SRC).libs/libfsio.so: $(fsio_SRC)Makefile | $(SW_DST)
 	+$(MAKE) -C $(fsio_SRC)
 
 $(fsio_SRC)Makefile: $(fsio_SRC)configure
-	cd $(fsio_SRC) && \
+	cd $(fsio_SRC) && autoreconf -i && \
 CPPFLAGS="-I$(CURDIR)/$(SW_INC)" \
 LDFLAGS="-L$(CURDIR)/$(SW_LIB)" \
 ./configure --host=$(ABI) --prefix=$(CURDIR)/$(SW_USR) \

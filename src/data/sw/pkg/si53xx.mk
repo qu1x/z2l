@@ -47,7 +47,7 @@ $(si53xx_SRC)si53xx: $(si53xx_SRC)Makefile | $(SW_DST)
 	+$(MAKE) -C $(si53xx_SRC)
 
 $(si53xx_SRC)Makefile: $(si53xx_SRC)configure
-	cd $(si53xx_SRC) && \
+	cd $(si53xx_SRC) && autoreconf -i && \
 ./configure --host=$(ABI) --prefix=$(CURDIR)/$(SW_USR) \
 --disable-shared $(CFG_SI53XX)
 

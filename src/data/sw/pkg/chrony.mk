@@ -51,7 +51,7 @@ $(chrony_SRC)chronyd $(chrony_SRC)chronyc: $(chrony_SRC)Makefile | $(SW_DST)
 	+$(MAKE) -C $(chrony_SRC)
 
 $(chrony_SRC)Makefile: $(chrony_SRC)configure
-	cd $(chrony_SRC) && \
+	cd $(chrony_SRC) && CC=arm-linux-gnueabihf-gcc \
 ./configure --host=$(ABI) --prefix=$(CURDIR)/$(SW_USR) \
 --disable-shared $(CFG_CHRONY)
 

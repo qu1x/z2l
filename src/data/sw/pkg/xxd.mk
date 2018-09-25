@@ -47,7 +47,7 @@ $(xxd_SRC)xxd: $(xxd_SRC)Makefile | $(SW_DST)
 	+$(MAKE) -C $(xxd_SRC)
 
 $(xxd_SRC)Makefile: $(xxd_SRC)configure
-	cd $(xxd_SRC) && \
+	cd $(xxd_SRC) && autoreconf -i && \
 ./configure --host=$(ABI) --prefix=$(CURDIR)/$(SW_USR) \
 --disable-shared $(CFG_XXD)
 
