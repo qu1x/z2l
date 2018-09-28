@@ -233,13 +233,13 @@ petalinux-image-common.inc
 tools/hsm/bin/unwrapped/lnx64.o/rlwrap
 
 $(HOME)/.z2l/hw.lic: | $(HOME)/.z2l
-	printf "port@host" > $@
+	printf "%s\n" $(HOME)/.Xilinx/Xilinx.lic > $@
 
 $(HOME)/.z2l/hw.src: | $(HOME)/.z2l
-	printf "/opt/Xilinx/Vivado/*/settings64.sh" > $@
+	printf "%s\n" /opt/Xilinx/Vivado/*/settings64.sh > $@
 
 $(HOME)/.z2l/fw.src: | $(HOME)/.z2l
-	printf "/opt/Xilinx/PetaLinux/*/settings.sh" > $@
+	printf "%s\n" /opt/Xilinx/PetaLinux/*/settings.sh > $@
 
 $(HOME)/.z2l:
 	mkdir -p $@

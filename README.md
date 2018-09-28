@@ -41,6 +41,7 @@ cd z2l-1.0.0
 ```sh
 sudo apt install git dh-autoreconf \
 g++-arm-linux-gnueabihf libpugixml-dev picocom
+sudo apt purge brltty
 ```
 
  1. Clone repository.
@@ -82,7 +83,7 @@ sudo apt update
 sudo apt install tofrodos iproute2 gawk xvfb git make net-tools rlwrap \
 libncurses5-dev tftpd zlib1g-dev zlib1g-dev:i386 libssl-dev flex bison \
 libselinux1 gnupg wget diffstat chrpath socat xterm autoconf libtool-bin tar \
-unzip texinfo gcc-multilib build-essential libglib2.0-dev screen pax gzip
+unzip texinfo build-essential libglib2.0-dev screen pax gzip
 ```
 
  1. Fix Xilinx PetaLinux 2018.2 installer by copying below `sed` wrapper to
